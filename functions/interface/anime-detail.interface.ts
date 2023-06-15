@@ -12,17 +12,17 @@ export interface AnimeInfo {
   type: string,
   episodes: number,
   status: string,
-  aired: string,
+  aired: AnimeAired,
   source: string,
   premiered: AnimeSeason,
-  broadcast: string,
+  broadcast: AnimeBroadcast,
   licensors: Array<AnimeLicensors>,
   producers: Array<AnimeProducers>,
   studios: Array<AnimeStudios>,
   genres: Array<AnimeGenres>,
   themes: Array<AnimeThemes>,
   demographics: Array<AnimeDemographics>,
-  duration: number,
+  duration: string,
   rating: string
 }
 
@@ -78,4 +78,18 @@ export interface AnimeDemographics {
   mal_id: number,
   type: string,
   name: string
+}
+
+export interface AnimeAired {
+  from: string,
+  to: string,
+  prop: object,
+  string?: string
+}
+
+export interface AnimeBroadcast {
+  day: string,
+  time: string,
+  timezone: string,
+  string?: string
 }
