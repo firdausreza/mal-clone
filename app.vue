@@ -20,9 +20,9 @@ onMounted(async () => {
     }
 
     animeData.value = await MAL_API.getAnimeFullDetail(51019).then((data) => data);
-    topAnime.value = await MAL_API.getTopAnime('favorite', 5, 2).then((data) => data);
+    topAnime.value = await MAL_API.getTopAnime('favorite', 5, 1).then((data) => data);
     animeSearchResult.value = await MAL_API.getAnimeSearchResults("One");
 
-    console.log(animeSearchResult.value, "searchResult");
+    console.log(topAnime.value, "searchResult");
 })
 </script>
