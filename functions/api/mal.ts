@@ -12,11 +12,14 @@ export const MAL_API = {
       return animeData;
     });
   },
-  getAnimeSearchResults: async (q: string, type: string, limit?: number) => {
-    return await axios.get(`${BASE_API_URL}/anime?q=${q}&type=${type}&limit=${limit || 10}&sfw`)
+  getAnimeSearchResults: async (q: string, limit?: number) => {
+    return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=asc&rating=r`).then(({data}) => {
+      const resultData = mapArrayDataToAnimeDetails(data.data);
+      return resultData;
+    })
   },
   getTopAnime: async (filter: string, limit?: number, page?: number) => {
-    return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}&sfw`).then(({ data }) => {
+    return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`).then(({ data }) => {
       const responseData = {
         data: mapArrayDataToAnimeDetails(data.data),
         pagination: data.pagination
@@ -25,12 +28,15 @@ export const MAL_API = {
     })
   },
   getCurrentSeasonAnime: async (type: string, limit?: number) => {
-    return await axios.get(`${BASE_API_URL}/seasons/now?filter=${type}&limit=${limit || 5}&sfw`)
+    return await axios.get(`${BASE_API_URL}/seasons/now?filter=${type}&limit=${limit || 5}`)
   },
   getSeasonLists: async () => {
     return await axios.get(`${BASE_API_URL}/seasons`)
   },
   getUpcomingSeasonAnime: async (type: string, limit?: number) => {
-    return await axios.get(`${BASE_API_URL}/seasons/upcoming?filter=${type}&limit=${limit || 5}&sfw`)
+    return await axios.get(`${BASE_API_URL}/seasons/upcoming?filter=${type}&limit=${limit || 5}`)
+  },
+  getRecentRecommendation: async (page?: number) => {
+    return await axios.get(`${BASE_API_URL}/recommendation/anime?page=${page || 1}`)
   }
 }

@@ -10,6 +10,7 @@ import { AnimeDetail } from './functions/interface/anime-detail.interface';
 
 let animeData = ref<AnimeDetail | null>(null);
 let topAnime = ref<object | null>(null);
+let animeSearchResult = ref(null);
 
 onMounted(async () => {
   if (window.localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in window.localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -20,7 +21,8 @@ onMounted(async () => {
 
     animeData.value = await MAL_API.getAnimeFullDetail(51019).then((data) => data);
     topAnime.value = await MAL_API.getTopAnime('favorite', 5, 2).then((data) => data);
+    animeSearchResult.value = await MAL_API.getAnimeSearchResults("One");
 
-    console.log(topAnime.value, "animeData");
+    console.log(animeSearchResult.value, "searchResult");
 })
 </script>
