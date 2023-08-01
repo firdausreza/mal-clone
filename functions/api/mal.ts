@@ -13,10 +13,17 @@ export const MAL_API = {
     });
   },
   getAnimeSearchResults: async (q: string, limit?: number) => {
-    return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=asc&rating=r`).then(({data}) => {
-      const resultData = mapArrayDataToAnimeDetails(data.data);
-      return resultData;
-    })
+    return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=asc&rating=g`)
+      .then((res) => {
+        if (res.status === 200) {
+          const resultData = mapArrayDataToAnimeDetails(res.data.data);
+          return resultData;
+        } else {
+          return null;
+        }
+      }).catch((e) => {
+        console.error(e);
+      })
   },
   getTopAnime: async (filter: string, limit?: number, page?: number) => {
     return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`).then(({ data }) => {
