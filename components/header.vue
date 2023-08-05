@@ -32,47 +32,46 @@
             id="search-navbar"
             v-model="searchKeyword"
             @keyup="debounceSearch"
-            class="block w-[300px] p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500
+            @focusin="searchInputFocusIn"
+            @focusout="showSearchResults = false"
+            class="block w-[400px] p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500
             focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
             dark:focus:ring-blue-500 dark:focus:border-blue-500" 
             placeholder="Search..."
           />
-          <div v-if="searchKeyword.length > 0 || searchKeyword !== ''" class="w-full z-10 top-[50px] absolute flex flex-col bg-gray-600 rounded-md">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Anime Search
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Top Anime
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Seasonal Anime
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Videos
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Reviews
-                </a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  Recommendations
+          <div v-show="showSearchResults" class="w-full z-10 top-[50px] absolute flex flex-col bg-gray-600 rounded-md">
+            <ul v-if="searchResults && searchResults.length > 0" class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+              <li v-for="anime in searchResults">
+                <a href="#" class="w-full flex gap-1.5 px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <div class="w-[100px]">
+                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain aspect-[2/3]">
+                  </div>
+                  <div class="w-[300px] flex flex-col items-start gap-1">
+                    <h3 class="font-semibold text-ellipsis">
+                      {{ anime.titles[0].title }}
+                    </h3>
+                    <p class="text-xs">
+                      Aired: {{ anime.information.aired.string }}
+                    </p>
+                    <p class="text-xs">
+                      Score: {{ anime.statistics.score }}
+                    </p>
+                    <p class="text-xs">
+                      Status: {{ anime.information.status }}
+                    </p>
+                  </div>
                 </a>
               </li>
             </ul>
             <div class="px-4 py-2 border-t-2 border-gray-400 cursor-pointer">
-              <a href="#" class="w-full text-decoration-none text-gray-300">
-                View all results for <span class="font-semibold text-underline">{{ searchKeyword }}</span>
+              <a href="#" class="w-full text-decoration-none text-gray-300 flex items-center">
+                <p>
+                  View all results for 
+                  <span class="font-bold underline underline-offset-1">{{ searchKeyword }}</span>
+                </p>
+                <span>
+                  <font-awesome-icon icon="fa-solid fa-spinner" size="sm" class="animate-spin ml-2" />
+                </span>
               </a>
             </div>
           </div>
@@ -91,12 +90,44 @@
             type="text" 
             id="search-navbar" 
             v-model="searchKeyword"
-            @keyup.once="debounceSearch"
+            @keyup="debounceSearch"
+            @focusin="searchInputFocusIn"
+            @focusout="showSearchResults = false"
             class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
             focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
             dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
             placeholder="Search..."
           />
+          <div v-show="showSearchResults" class="w-full z-10 top-[50px] absolute flex flex-col bg-gray-600 rounded-md">
+            <ul v-if="searchResults && searchResults.length > 0" class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+              <li v-for="anime in searchResults">
+                <a href="#" class="w-full flex gap-1.5 px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <div class="w-[100px]">
+                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain aspect-[2/3]">
+                  </div>
+                  <div class="w-[300px] flex flex-col items-start gap-1">
+                    <h3 class="font-semibold text-ellipsis">
+                      {{ anime.titles[0].title }}
+                    </h3>
+                    <p class="text-xs">
+                      Aired: {{ anime.information.aired.string }}
+                    </p>
+                    <p class="text-xs">
+                      Score: {{ anime.statistics.score }}
+                    </p>
+                    <p class="text-xs">
+                      Status: {{ anime.information.status }}
+                    </p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+            <div class="px-4 py-2 border-t-2 border-gray-400 cursor-pointer">
+              <a href="#" class="w-full text-decoration-none text-gray-300">
+                View all results for <span class="font-bold underline underline-offset-1">{{ searchKeyword }}</span>
+              </a>
+            </div>
+          </div>
         </div>
         <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
           <li @mouseover="showHoverDropdown('anime')" class="relative">
@@ -291,7 +322,7 @@ export default {
     const showWatchDropdown = ref<boolean>(false);
     const showReadDropdown = ref<boolean>(false);
     const searchKeyword = ref<string>('');
-    const searchResults = ref<Array<AnimeDetail> | null>([]);
+    const searchResults = ref<AnimeDetail[] | null>([]);
     const showSearchResults = ref<boolean>(false);
     let searchTimeout: any = null;
 
@@ -429,18 +460,26 @@ export default {
 
     function debounceSearch() {
       if (searchKeyword.value !== '') {
+        showSearchResults.value = true;
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
           await MAL_API.getAnimeSearchResults(searchKeyword.value).then((res) => {
-            console.log(res, "response debounceSearch");
+            console.log(res, "res debounceSearch");
+            searchResults.value = res;
           })
         }, 2500)
       }
     }
 
+    function searchInputFocusIn() {
+      if (searchKeyword.value !== '') {
+        showSearchResults.value = true;
+      }
+    }
+
     return {
       windowWidth, showAnimeDropdown, showMangaDropdown, showCommunityDropdown, showIndustryDropdown, showWatchDropdown, showReadDropdown,
-      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch
+      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch, showSearchResults, searchResults, searchInputFocusIn
     }
   }
 }

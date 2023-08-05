@@ -13,7 +13,7 @@ export const MAL_API = {
     });
   },
   getAnimeSearchResults: async (q: string, limit?: number) => {
-    return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=asc&rating=g`)
+    return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=asc&type=tv&type=movie&type=ona&type=ova`)
       .then((res) => {
         if (res.status === 200) {
           const resultData = mapArrayDataToAnimeDetails(res.data.data);
