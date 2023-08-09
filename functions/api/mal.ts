@@ -26,16 +26,21 @@ export const MAL_API = {
       })
   },
   getTopAnime: async (filter: string, limit?: number, page?: number) => {
-    return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`).then(({ data }) => {
-      const responseData = {
-        data: mapArrayDataToAnimeDetails(data.data),
-        pagination: data.pagination
-      } 
-      return responseData;
-    })
+    return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`)
+    .then((res) => {
+      if (res.status === 200) {
+        const responseData = {
+          data: mapArrayDataToAnimeDetails(res.data.data),
+          pagination: res.data.pagination
+        } 
+        return responseData;
+      } else {
+        return null;
+      }
+    }).catch((e) => console.error(e))
   },
-  getCurrentSeasonAnime: async () => {
-    return await axios.get(`${BASE_API_URL}/seasons/now?filter=tv`).then((res) => {
+  getCurrentSeasonAnime: async (limit?: number) => {
+    return await axios.get(`${BASE_API_URL}/seasons/now?filter=tv&limit=${limit || 10}`).then((res) => {
       if (res.status === 200) {
         const resultData = mapArrayDataToAnimeDetails(res.data.data);
         return resultData;
