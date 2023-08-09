@@ -20,8 +20,8 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@splidejs/vue-splide": "^0.6.12",
     "axios": "^1.4.0",
-    "flowbite": "^1.6.5",
-    "swiper": "^10.0.4"
+    "flowbite": "^1.6.5"
   }
 }
