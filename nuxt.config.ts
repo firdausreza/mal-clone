@@ -20,5 +20,6 @@ export default defineNuxtConfig({
       ],
       title: 'MyAnimeList Clone'
     }
-  }
+  },
+  pages: true
 })

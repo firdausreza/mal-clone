@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white border-gray-200 dark:bg-gray-900">
+  <nav class="bg-white dark:bg-gray-900 border-b-2 border-mal-blue">
     <div v-show="windowWidth > 768" id="header-top" class="max-w-screen-xl flex flex-wrap items-center justify-between px-4 pt-4 pb-2 mx-auto">
       <a href="/" class="flex items-center">
         <img src="~/assets/img/logo/mal-logo.png" class="h-8 mr-3 dark:brightness-[25]" alt="MAL Logo" />
@@ -31,7 +31,7 @@
             type="text" 
             id="search-navbar"
             v-model="searchKeyword"
-            @keyup="debounceSearch"
+            @keyup="(e) => debounceSearch(e)"
             @focusin="searchInputFocusIn"
             @focusout="showSearchResults = false"
             class="block w-[400px] p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500
@@ -43,8 +43,8 @@
             <ul v-if="searchResults && searchResults.length > 0" class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
               <li v-for="anime in searchResults">
                 <a href="#" class="w-full flex gap-1.5 px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  <div class="w-[100px]">
-                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain aspect-[2/3]">
+                  <div class="w-[75px]">
+                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain">
                   </div>
                   <div class="w-[300px] flex flex-col items-start gap-1">
                     <h3 class="font-semibold text-ellipsis">
@@ -69,7 +69,7 @@
                   View all results for 
                   <span class="font-bold underline underline-offset-1">{{ searchKeyword }}</span>
                 </p>
-                <span>
+                <span v-show="showSearchSpinner">
                   <font-awesome-icon icon="fa-solid fa-spinner" size="sm" class="animate-spin ml-2" />
                 </span>
               </a>
@@ -90,7 +90,7 @@
             type="text" 
             id="search-navbar" 
             v-model="searchKeyword"
-            @keyup="debounceSearch"
+            @keyup="(e) => debounceSearch(e)"
             @focusin="searchInputFocusIn"
             @focusout="showSearchResults = false"
             class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 
@@ -102,8 +102,8 @@
             <ul v-if="searchResults && searchResults.length > 0" class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
               <li v-for="anime in searchResults">
                 <a href="#" class="w-full flex gap-1.5 px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
-                  <div class="w-[100px]">
-                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain aspect-[2/3]">
+                  <div class="w-[75px]">
+                    <img :src="anime.images.webp.image_url" alt="anime picture" class="object-contain">
                   </div>
                   <div class="w-[300px] flex flex-col items-start gap-1">
                     <h3 class="font-semibold text-ellipsis">
@@ -123,48 +123,66 @@
               </li>
             </ul>
             <div class="px-4 py-2 border-t-2 border-gray-400 cursor-pointer">
-              <a href="#" class="w-full text-decoration-none text-gray-300">
-                View all results for <span class="font-bold underline underline-offset-1">{{ searchKeyword }}</span>
+              <a href="#" class="w-full text-decoration-none text-gray-300 flex items-center">
+                <p>
+                  View all results for 
+                  <span class="font-bold underline underline-offset-1">{{ searchKeyword }}</span>
+                </p>
+                <span v-show="showSearchSpinner">
+                  <font-awesome-icon icon="fa-solid fa-spinner" size="sm" class="animate-spin ml-2" />
+                </span>
               </a>
             </div>
           </div>
         </div>
         <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-          <li @mouseover="showHoverDropdown('anime')" class="relative">
-            <button @click="showClickDropdown('anime')" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+          <li @mouseover="showHoverDropdown('anime')" @mouseleave="showHoverDropdown('leave')" class="relative">
+            <button 
+              @click="showClickDropdown('anime')" 
+              class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 
+              md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white 
+              md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 
+              md:dark:hover:bg-transparent"
+            >
               Anime 
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showAnimeDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
-              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+            <div 
+              @mouseover="showHoverDropdown('anime')" 
+              @mouseleave="showHoverDropdown('leave')" 
+              v-show="showAnimeDropdown" 
+              class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[25px] md:left-0 font-normal bg-mal-blue divide-y 
+              divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600"
+            >
+              <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Anime Search
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Top Anime
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Seasonal Anime
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Videos
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Reviews
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Recommendations
                   </a>
                 </li>
@@ -177,30 +195,30 @@
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showMangaDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
-              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showMangaDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+              <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Manga Search
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Top Manga
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Manga Store
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Reviews
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Recommendations
                   </a>
                 </li>
@@ -213,30 +231,30 @@
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showCommunityDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
-              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showCommunityDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+              <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Interest Stacks
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Forum
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Clubs
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Blogs
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Users
                   </a>
                 </li>
@@ -249,30 +267,30 @@
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showIndustryDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
-              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showIndustryDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+              <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     News
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Featured Articles
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     People
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Characters
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Companies
                   </a>
                 </li>
@@ -285,15 +303,15 @@
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showWatchDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
-              <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownLargeButton">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showWatchDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+              <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Episode Videos
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-gray-100 dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Anime Trailers
                   </a>
                 </li>
@@ -324,6 +342,7 @@ export default {
     const searchKeyword = ref<string>('');
     const searchResults = ref<AnimeDetail[] | null>([]);
     const showSearchResults = ref<boolean>(false);
+    const showSearchSpinner = ref<boolean>(false);
     let searchTimeout: any = null;
 
     onUpdated(() => {
@@ -458,14 +477,15 @@ export default {
       }
     }
 
-    function debounceSearch() {
-      if (searchKeyword.value !== '') {
+    function debounceSearch(event?: any) {
+      if (event.keyCode !== 27 && searchKeyword.value !== '') {
         showSearchResults.value = true;
+        showSearchSpinner.value = true;
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
-          await MAL_API.getAnimeSearchResults(searchKeyword.value).then((res) => {
-            console.log(res, "res debounceSearch");
+          await MAL_API.getAnimeSearchResults(searchKeyword.value, 5).then((res) => {
             searchResults.value = res;
+            showSearchSpinner.value = false;
           })
         }, 2500)
       }
@@ -479,7 +499,7 @@ export default {
 
     return {
       windowWidth, showAnimeDropdown, showMangaDropdown, showCommunityDropdown, showIndustryDropdown, showWatchDropdown, showReadDropdown,
-      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch, showSearchResults, searchResults, searchInputFocusIn
+      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch, showSearchResults, searchResults, searchInputFocusIn, showSearchSpinner
     }
   }
 }
