@@ -19,7 +19,7 @@
             <img :src="anime.images.webp.image_url" alt="anime poster small" class="object-fill border border-mal-lightdark">
           </div>
           <div class="flex flex-1 flex-col gap-1 ml-2">
-            <nuxt-link to="/" class="text-sm font-semibold text-mal-lightblue hover:underline underline-offset-1 capitalize">
+            <nuxt-link to="/" class="text-xs font-semibold text-mal-lightblue hover:underline underline-offset-1 capitalize">
               {{ anime.titles[0].title }}
             </nuxt-link>
             <p class="text-gray-300 text-xs">

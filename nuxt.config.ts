@@ -7,9 +7,12 @@ export default defineNuxtConfig({
     '@/assets/css/index.css',
     '@fortawesome/fontawesome-svg-core/styles.css'
   ],
-  // plugins: [
-  //   '~/plugins/fontawesome.js'
-  // ],
+  build: {
+    transpile: ['@fortawesome/vue-fontawesome']
+  },
+  plugins: [
+    '~/plugins/fontawesome.js',
+  ],
   app: {
     head: {
       link: [
@@ -21,5 +24,5 @@ export default defineNuxtConfig({
       title: 'MyAnimeList Clone'
     }
   },
-  pages: true
+  pages: true,
 })
