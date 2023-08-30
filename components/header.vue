@@ -15,7 +15,7 @@
     </div>  
     <div id="header-bottom" class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 pt-4 md:pt-2 pb-4">
       <a v-show="windowWidth < 769" href="/" class="flex items-center">
-        <img src="~/assets/img/logo/mal-logo.png" class="h-8 mr-3 dark:brightness-[25]" alt="MAL Logo" />
+        <img src="~/assets/img/logo/mal-logo.png" class="h-6 mr-3 dark:brightness-[25]" alt="MAL Logo" />
       </a>
       <div class="flex md:order-2">
         <button type="button" data-collapse-toggle="navbar-search" aria-controls="navbar-search" aria-expanded="false" class="md:hidden text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5 mr-1" >
@@ -138,7 +138,8 @@
         <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-mal-dark md:dark:bg-mal-dark dark:border-gray-700">
           <li @mouseover="showHoverDropdown('anime')" @mouseleave="showHoverDropdown('leave')" class="relative">
             <button 
-              @click="showClickDropdown('anime')" 
+              id="btn-dropdown"
+              @click="showClickDropdown('anime')"
               class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 
               md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white 
               md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 
@@ -153,36 +154,36 @@
               @mouseleave="showHoverDropdown('leave')" 
               v-show="showAnimeDropdown" 
               class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[25px] md:left-0 font-normal bg-mal-blue divide-y 
-              divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600"
+              divide-gray-100 rounded-lg shadow dark:bg-mal-lightdark dark:divide-gray-600"
             >
               <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Anime Search
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Top Anime
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Seasonal Anime
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Videos
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Reviews
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Recommendations
                   </a>
                 </li>
@@ -190,35 +191,41 @@
             </div>
           </li>
           <li @mouseover="showHoverDropdown('manga')" class="relative">
-            <button @click="showClickDropdown('manga')" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+            <button 
+              id="btn-dropdown" 
+              @click="showClickDropdown('manga')" 
+              class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent 
+              md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white 
+              dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+            >
               Manga 
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showMangaDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showMangaDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-mal-lightdark dark:divide-gray-600">
               <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Manga Search
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Top Manga
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Manga Store
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Reviews
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Recommendations
                   </a>
                 </li>
@@ -226,30 +233,36 @@
             </div>
           </li>
           <li @mouseover="showHoverDropdown('community')" class="relative">
-            <button @click="showClickDropdown('community')" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+            <button 
+              id="btn-dropdown"
+              @click="showClickDropdown('community')" 
+              class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent 
+              md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white 
+              dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+            >
               Community 
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showCommunityDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showCommunityDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-mal-lightdark dark:divide-gray-600">
               <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Interest Stacks
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Forum
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Clubs
                   </a>
                 </li>
                 <li>
-                  <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
+                  <a id="nav-btn" href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
                     Blogs
                   </a>
                 </li>
@@ -262,12 +275,18 @@
             </div>
           </li>
           <li @mouseover="showHoverDropdown('industry')" class="relative">
-            <button @click="showClickDropdown('industry')" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+            <button 
+              id="btn-dropdown"
+              @click="showClickDropdown('industry')" 
+              class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent 
+              md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white 
+              dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+            >
               Industry 
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showIndustryDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showIndustryDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-mal-lightdark dark:divide-gray-600">
               <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
                   <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
@@ -298,12 +317,18 @@
             </div>
           </li>
           <li @mouseover="showHoverDropdown('watch')" class="relative">
-            <button @click="showClickDropdown('watch')" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
+            <button 
+              id="btn-dropdown"
+              @click="showClickDropdown('watch')" 
+              class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent 
+              md:border-0 md:hover:text-mal-blue md:p-0 md:w-auto dark:text-white md:dark:hover:text-mal-blue dark:focus:text-white 
+              dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+            >
               Watch 
               <font-awesome-icon icon="fa-solid fa-chevron-down" size="xs" class="ml-2" />
             </button>
             <!-- Dropdown menu -->
-            <div @mouseleave="showHoverDropdown('leave')" v-show="showWatchDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-600 dark:divide-gray-600">
+            <div @mouseleave="showHoverDropdown('leave')" v-show="showWatchDropdown" class="w-full my-2 md:my-0 md:w-max md:z-10 md:absolute md:top-[30px] md:left-0 font-normal bg-mal-blue divide-y divide-gray-100 rounded-lg shadow dark:bg-mal-lightdark dark:divide-gray-600">
               <ul class="py-2 text-sm text-white dark:text-gray-200" aria-labelledby="dropdownLargeButton">
                 <li>
                   <a href="#" class="block px-4 py-2 font-semibold hover:bg-white hover:text-mal-blue dark:hover:bg-mal-blue dark:hover:text-white">
@@ -340,7 +365,7 @@ export default {
     const showWatchDropdown = ref<boolean>(false);
     const showReadDropdown = ref<boolean>(false);
     const searchKeyword = ref<string>('');
-    const searchResults = ref<AnimeDetail[] | null>([]);
+    const searchResults = ref<AnimeDetail[]>();
     const showSearchResults = ref<boolean>(false);
     const showSearchSpinner = ref<boolean>(false);
     let searchTimeout: any = null;
@@ -354,11 +379,26 @@ export default {
     onMounted(() => {
       initFlowbite();
       windowWidth.value = window.innerWidth;
+
+      document.body.addEventListener('click', (e) => {
+        if (e.target.id !== 'btn-dropdown') {
+          showAnimeDropdown.value = false;
+          showMangaDropdown.value = false;
+          showCommunityDropdown.value = false;
+          showIndustryDropdown.value = false;
+          showWatchDropdown.value = false;
+          showReadDropdown.value = false;
+        }
+      })
     });
 
     onBeforeUnmount(() => {
       window.removeEventListener('resize', () => {})
     });
+
+    function clickOutside(event: any) {
+      console.log(`Clicked event: ${event}`)
+    }
 
     function showClickDropdown(element: string) {
       if (windowWidth.value < 769) {
@@ -483,8 +523,8 @@ export default {
         showSearchSpinner.value = true;
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
-          await MAL_API.getAnimeSearchResults(searchKeyword.value, 5).then((res) => {
-            searchResults.value = res;
+          await MAL_API.getAnimeSearchResults(searchKeyword.value, 5).then((data) => {
+            searchResults.value = data?.data;
             showSearchSpinner.value = false;
           })
         }, 2500)
@@ -499,7 +539,8 @@ export default {
 
     return {
       windowWidth, showAnimeDropdown, showMangaDropdown, showCommunityDropdown, showIndustryDropdown, showWatchDropdown, showReadDropdown,
-      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch, showSearchResults, searchResults, searchInputFocusIn, showSearchSpinner
+      showHoverDropdown, showClickDropdown, searchKeyword, debounceSearch, showSearchResults, searchResults, searchInputFocusIn, showSearchSpinner,
+      clickOutside
     }
   }
 }
