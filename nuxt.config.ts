@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss'
   ],
+  components: [
+    '~/components'
+  ],
   css: [
     '@/assets/css/index.css',
     '@fortawesome/fontawesome-svg-core/styles.css'
