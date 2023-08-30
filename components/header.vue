@@ -523,7 +523,7 @@ export default {
         showSearchSpinner.value = true;
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(async () => {
-          await MAL_API.getAnimeSearchResults(searchKeyword.value, 5).then((data) => {
+          await MAL_API.anime.getAnimeSearchResults(searchKeyword.value, 5).then((data) => {
             searchResults.value = data?.data;
             showSearchSpinner.value = false;
           })

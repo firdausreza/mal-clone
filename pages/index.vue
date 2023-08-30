@@ -5,8 +5,8 @@
         <h1 class="font-bold text-lg">Welcome to MyAnimeList!</h1>
       </div>
     </section>
-    <section class="max-w-screen-xl flex flex-col lg:flex-row items-start mx-auto max-[640px]:gap-2 p-4">
-      <section id="main-content" class="w-full lg:w-[75%] flex flex-col gap-4 lg:pr-2 lg:border-r-2 border-gray-300">
+    <section class="max-w-screen-xl flex flex-col lg:flex-row items-start mx-auto max-[640px]:gap-5 p-4">
+      <section id="main-content" class="w-full lg:w-[75%] flex flex-col gap-3 lg:pr-2 lg:border-r-2 border-gray-300">
         <anime-carousel
           id="current-season-anime"
           :carousel-title="currentSeason"
@@ -16,7 +16,7 @@
           <swiper-container
             slides-per-view="auto"
             slides-per-group-auto="false"
-            space-between="5"
+            space-between="3"
             loop="true"
             speed="700"
             :navigation="checkNavSlideBreakpoints"
@@ -26,6 +26,7 @@
                 slidesPerGroup: 4,
                 slidesOffsetAfter: 20,
                 slidesPerGroupAuto: 'true',
+                spaceBetween: 5
               }
             }"
             v-slot
@@ -46,36 +47,59 @@
           </swiper-container>
         </anime-carousel>
 
-        <!-- <anime-carousel
-          id="recent-episodes"
+        <anime-carousel
+          id="current-season-anime"
           carousel-title="Latest Updated Anime Episodes"
           link-href=""
           v-if="recentEpisodes && recentEpisodes.length > 0"
         >
-          <SplideSlide id="recent-episode-slides" v-for="anime in recentEpisodes" v-slot>
-            <nuxt-link class="flex flex-1 flex-col gap-1 cursor-pointer">
-              <div class="flex flex-1 relative">
-                <img :src="anime.entry.images.webp.image_url" alt="Anime Poster" class="z-0 border border-mal-lightdark">
-                <div class="w-full absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75">
-                  <nuxt-link v-for="episode in anime.episodes" class="text-xs text-white block">
-                    {{ episode.title }}
-                    <span v-if="episode.premium">
-                      <font-awesome-icon icon="fa-solid fa-crown" style="color: #f8d345;" />
-                    </span>
-                  </nuxt-link>
+          <swiper-container
+            slides-per-view="auto"
+            slides-per-group-auto="false"
+            space-between="3"
+            loop="true"
+            speed="700"
+            :navigation="checkNavSlideBreakpoints"
+            :free-mode="checkFreeModeBreakpoints"
+            :breakpoints="{
+              768: {
+                slidesPerGroup: 4,
+                slidesOffsetAfter: 20,
+                slidesPerGroupAuto: 'true',
+                spaceBetween: 5
+              }
+            }"
+            v-slot
+          >
+            <swiper-slide v-for="anime in recentEpisodes" lazy="true" class="w-[120px]">
+              <nuxt-link class="cursor-pointer overflow-x-hidden">
+                <div class="relative">
+                  <img :src="anime.entry.images.webp.image_url" alt="Anime Poster" class="z-0 w-[120px] h-[180px] object-cover border border-mal-lightdark">
+                  <div class="absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75">
+                    <nuxt-link v-for="episode in anime.episodes" class="text-xs text-white block">
+                      {{ episode.title }}
+                      <span v-if="episode.premium">
+                        <font-awesome-icon icon="fa-solid fa-crown" style="color: #f8d345;" />
+                      </span>
+                    </nuxt-link>
+                  </div>
                 </div>
-              </div>
-              <nuxt-link class="z-10 text-xs font-semibold">
-                {{ anime.entry.title }}
+                <nuxt-link class="z-10 text-xs font-semibold block truncate">
+                  {{ anime.entry.title }}
+                </nuxt-link>
               </nuxt-link>
-            </nuxt-link>
-          </SplideSlide>
-        </anime-carousel> -->
+            </swiper-slide>
+          </swiper-container>
+        </anime-carousel>
       </section>
       <section id="sidebar" class="w-full lg:flex-1 flex flex-col gap-3 lg:pl-2">
         <top-anime
           top-title="Top Airing Anime"
           :anime-data="topAiringAnime"
+        ></top-anime>
+        <top-anime
+          top-title="Top Upcoming Anime"
+          :anime-data="topUpcomingAnime"
         ></top-anime>
       </section>
     </section>
@@ -89,9 +113,6 @@ import { AnimeDetail } from '../functions/interface/anime-detail.interface';
 
 import TopAnime from '../components/homepage/TopAnime.vue';
 import AnimeCarousel from '~/components/carousel/AnimeCarousel.vue';
-import { register } from 'swiper/element/bundle';
-
-register();
 
 export default {
   name: 'Homepage',
@@ -103,7 +124,9 @@ export default {
     const currentSeasonAnime = ref<AnimeDetail[]>();
     const currentSeason = ref<string>();
     const topAiringAnime = ref<AnimeDetail[]>();
+    const topUpcomingAnime = ref<AnimeDetail[]>();
     const recentEpisodes = ref();
+
     const checkNavSlideBreakpoints = computed(() => {
       if (windowWidth.value > 768) {
         return 'true'
@@ -132,19 +155,22 @@ export default {
 
     onMounted(() => {
       currentSeason.value = getCurrentSeason();
-      api.getCurrentSeasonAnime(20).then((data) => {
+      api.season.getCurrentSeasonAnime(20).then((data) => {
         currentSeasonAnime.value = data?.data;
       });
-      api.getTopAnime('airing').then((data) => {
-        topAiringAnime.value = data?.data
+      api.top.getTopAnime('airing').then((data) => {
+        topAiringAnime.value = data?.data;
       });
-      api.getWatchRecentEpisodes().then((data) => {
-        recentEpisodes.value = data?.data.filter((_data: any) => !_data.region_locked).slice(0, 30)
+      api.top.getTopAnime('upcoming').then((data) => {
+        topUpcomingAnime.value = data?.data;
       })
+      api.watch.getWatchRecentEpisodes().then((data) => {
+        recentEpisodes.value = data?.data.filter((_data: any) => !_data.region_locked).slice(0, 30)
+      });
     })
 
     return {
-      currentSeasonAnime, currentSeason, topAiringAnime, recentEpisodes,
+      currentSeasonAnime, currentSeason, topAiringAnime, recentEpisodes, topUpcomingAnime,
       checkFreeModeBreakpoints, checkNavSlideBreakpoints
     }
   }
