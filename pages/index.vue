@@ -6,7 +6,7 @@
       </div>
     </section>
     <section class="max-w-screen-xl flex flex-col lg:flex-row items-start mx-auto max-[640px]:gap-5 p-4">
-      <section id="main-content" class="w-full lg:w-[75%] flex flex-col gap-3 lg:pr-2 lg:border-r-2 border-gray-300">
+      <section id="main-content" class="flex-1 lg:max-w-[75%] flex flex-col gap-4 lg:pr-2 lg:border-r-2 border-gray-300">
         <anime-carousel
           id="current-season-anime"
           :carousel-title="currentSeason"
@@ -91,6 +91,10 @@
             </swiper-slide>
           </swiper-container>
         </anime-carousel>
+
+        <anime-reviews
+          :review-data="recentReviews"
+        ></anime-reviews>
       </section>
       <section id="sidebar" class="w-full lg:flex-1 flex flex-col gap-3 lg:pl-2">
         <top-anime
@@ -101,6 +105,10 @@
           top-title="Top Upcoming Anime"
           :anime-data="topUpcomingAnime"
         ></top-anime>
+        <top-anime
+          top-title="Most Popular Anime"
+          :anime-data="topPopularAnime"
+        ></top-anime>
       </section>
     </section>
   </div>
@@ -108,16 +116,18 @@
 
 <script lang="ts">
 import { getCurrentSeason } from '~/functions/composables/mal-season';
-import { MAL_API as api } from '../functions/api/mal';
-import { AnimeDetail } from '../functions/interface/anime-detail.interface';
+import { MAL_API as api } from '~/functions/api/mal';
+import { AnimeDetail } from '~/functions/interface/anime-detail.interface';
 
-import TopAnime from '../components/homepage/TopAnime.vue';
+import TopAnime from '~/components/homepage/TopAnime.vue';
 import AnimeCarousel from '~/components/carousel/AnimeCarousel.vue';
+import AnimeReviews from '~/components/homepage/AnimeReviews.vue';
+import { AnimeReview } from '../functions/interface/anime-review.interface';
 
 export default {
   name: 'Homepage',
   components: {
-    AnimeCarousel, TopAnime
+    AnimeCarousel, TopAnime, AnimeReviews
   },
   setup() {
     const windowWidth = ref<number>(0);
@@ -125,7 +135,9 @@ export default {
     const currentSeason = ref<string>();
     const topAiringAnime = ref<AnimeDetail[]>();
     const topUpcomingAnime = ref<AnimeDetail[]>();
+    const topPopularAnime = ref<AnimeDetail[]>();
     const recentEpisodes = ref();
+    const recentReviews = ref<AnimeReview[]>();
 
     const checkNavSlideBreakpoints = computed(() => {
       if (windowWidth.value > 768) {
@@ -153,24 +165,30 @@ export default {
       window.removeEventListener('resize', () => {})
     });
 
-    onMounted(() => {
+    onMounted(async () => {
       currentSeason.value = getCurrentSeason();
-      api.season.getCurrentSeasonAnime(20).then((data) => {
+      await api.season.getCurrentSeasonAnime(20).then((data) => {
         currentSeasonAnime.value = data?.data;
       });
-      api.top.getTopAnime('airing').then((data) => {
+      await api.watch.getWatchRecentEpisodes().then((data) => {
+        recentEpisodes.value = data?.data.filter((_data: any) => !_data.region_locked).slice(0, 30);
+      });
+      await api.top.getTopAnime('airing').then((data) => {
         topAiringAnime.value = data?.data;
       });
-      api.top.getTopAnime('upcoming').then((data) => {
+      await api.top.getTopAnime('upcoming').then((data) => {
         topUpcomingAnime.value = data?.data;
-      })
-      api.watch.getWatchRecentEpisodes().then((data) => {
-        recentEpisodes.value = data?.data.filter((_data: any) => !_data.region_locked).slice(0, 30)
+      });
+      await api.top.getTopAnime('bypopularity', 10).then((data) => {
+        topPopularAnime.value = data?.data;
+      });
+      await api.review.getRecentAnimeReviews().then((data) => {
+        recentReviews.value = data?.data.slice(0, 5);
       });
     })
 
     return {
-      currentSeasonAnime, currentSeason, topAiringAnime, recentEpisodes, topUpcomingAnime,
+      currentSeasonAnime, currentSeason, topAiringAnime, topUpcomingAnime, topPopularAnime, recentEpisodes, recentReviews, 
       checkFreeModeBreakpoints, checkNavSlideBreakpoints
     }
   }
