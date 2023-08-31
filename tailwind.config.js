@@ -12,7 +12,7 @@ module.exports = {
     extend: {
       colors: {
         'mal-blue': '#2e51a2',
-        'mal-lightblue': '#e1e7f5',
+        'mal-lightblue': '#abc4ed',
         'mal-dark': '#121212',
         'mal-lightdark': '#333333',
         'mal-semidark': '#181818'

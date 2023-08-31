@@ -26,7 +26,7 @@
               <p class="text-gray-300 text-xs">
                 {{ anime.information.type }}, {{ anime.information.episodes || 0 }} eps, scored {{ anime.statistics.score || 'N/A' }}
                 <br>
-                {{ anime.statistics.members }} members
+                {{ numeral(anime.statistics.members).format('0,0') }} members
               </p>
             </div>
           </div>
@@ -77,7 +77,8 @@
 </template>
 
 <script lang="ts">
-import { AnimeDetail } from '../../functions/interface/anime-detail.interface';
+import { AnimeDetail } from '~/functions/interface/anime-detail.interface';
+import numeral from 'numeral';
 
 export default {
   name: 'TopAnime',
@@ -107,7 +108,7 @@ export default {
     })
 
     return {
-      topTitle, linkHref, animeData, windowWidth
+      topTitle, linkHref, animeData, windowWidth, numeral
     }
   }
 }

@@ -1,5 +1,6 @@
 import { AnimeDetail, AnimeLicensors, AnimeProducers } from "../interface/anime-detail.interface";
-import { AnimeDataResponse } from "../interface/response.interface";
+import { AnimeReview } from "../interface/anime-review.interface";
+import { AnimeDataResponse, ReviewsResponse } from "../interface/response.interface";
 
 export function mapArrayDataToAnimeDetails(animeData: Array<AnimeDataResponse>) {
   return animeData.map((data) => {
@@ -92,4 +93,29 @@ export function mapObjectToAnimeDetail(animeData: AnimeDataResponse) {
       favorites: animeData.favorites
     }
   }
+}
+
+export function mapToAnimeReviews(animeData: ReviewsResponse[]) {
+  return animeData.map((data): AnimeReview => {
+    return {
+      anime: {
+        images: data.entry.images,
+        mal_id: data.entry.mal_id,
+        title: data.entry.title,
+        url: data.entry.url
+      },
+      date: data.date,
+      episodes_watched: data.episodes_watched,
+      is_preliminary: data.is_preliminary,
+      is_spoiler: data.is_spoiler,
+      reactions: data.reactions,
+      review: data.review,
+      review_id: data.mal_id,
+      score: data.score,
+      tags: data.tags,
+      type: data.type,
+      url: data.url,
+      user: data.user
+    }
+  })
 }

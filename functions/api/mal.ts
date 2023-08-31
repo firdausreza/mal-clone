@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AnimeDetail, AnimeLicensors, AnimeProducers } from '../interface/anime-detail.interface';
 import { ApiResponse } from '../interface/response.interface';
-import { mapArrayDataToAnimeDetails, mapObjectToAnimeDetail } from '../composables/map-response';
+import { mapArrayDataToAnimeDetails, mapObjectToAnimeDetail, mapToAnimeReviews } from '../composables/map-response';
 
 const BASE_API_URL = 'https://api.jikan.moe/v4';
 
@@ -30,8 +30,35 @@ export const MAL_API = {
     },
   },
   recommendation: {
-    getRecentAnimeRecommendation: async (page?: number) => {
-      return await axios.get(`${BASE_API_URL}/recommendation/anime?page=${page || 1}`);
+    getRecentAnimeRecommendation: async () => {
+      return await axios.get(`${BASE_API_URL}/recommendations/anime`)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data, 'data recommendation')
+          } else {
+            return null;
+          }
+        }).catch((e) => {
+          console.error(e);
+        })
+    }
+  },
+  review: {
+    getRecentAnimeReviews: async () => {
+      return await axios.get(`${BASE_API_URL}/reviews/anime?preliminary=true&spoiler=true`)
+        .then((res) => {
+          if (res.status === 200) {
+            const responseData = {
+              data: mapToAnimeReviews(res.data.data),
+              pagination: res.data.pagination
+            }
+            return responseData;
+          } else {
+            return null;
+          }
+        }).catch((e) => {
+          console.error(e);
+        })
     }
   },
   season: {
@@ -76,7 +103,6 @@ export const MAL_API = {
     getWatchRecentEpisodes: async () => {
       return await axios.get(`${BASE_API_URL}/watch/episodes`).then((res) => {
         if (res.status === 200) {
-          console.log(res, 'response');
           const responseData = {
             data: res.data.data
           }
