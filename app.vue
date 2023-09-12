@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <app-load v-show="isLoading" />
+  <div :class="isLoading ? 'overflow-hidden' : ''">
+    <app-load v-show="isLoading" class="fixed w-screen h-screen bg-white" />
     <NuxtLayout />
   </div>
 </template>
