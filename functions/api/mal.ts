@@ -13,20 +13,20 @@ export const MAL_API = {
         return animeData;
       });
     },
-    getAnimeSearchResults: async (q: string, limit?: number) => {
-      return await axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=desc&type=tv&type=movie`)
+    getAnimeSearchResults: async (q: string, limit?: number): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        axios.get(`${BASE_API_URL}/anime?q=${q}&limit=${limit || 10}&sort=desc&type=tv&type=movie`)
         .then((res) => {
           if (res.status === 200) {
-            const responseData = {
-              data: mapArrayDataToAnimeDetails(res.data.data)
-            }
-            return responseData;
-          } else {
-            return null;
-          }
+            resolve({
+              data: mapArrayDataToAnimeDetails(res.data.data),
+              pagination: res.data.pagination || null
+            });
+          } else resolve({ data: null, pagination: null })
         }).catch((e) => {
-          console.error(e);
+          reject(e);
         })
+      });
     },
   },
   recommendation: {
@@ -44,39 +44,42 @@ export const MAL_API = {
     }
   },
   review: {
-    getRecentAnimeReviews: async () => {
-      return await axios.get(`${BASE_API_URL}/reviews/anime?preliminary=true&spoiler=true`)
-        .then((res) => {
-          if (res.status === 200) {
-            const responseData = {
-              data: mapToAnimeReviews(res.data.data),
-              pagination: res.data.pagination
-            }
-            return responseData;
-          } else {
-            return null;
-          }
-        }).catch((e) => {
-          console.error(e);
-        })
+    getRecentAnimeReviews: (): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          await axios.get(`${BASE_API_URL}/reviews/anime?preliminary=true&spoiler=true`)
+            .then((res) => {
+              if (res.status === 200) {
+                resolve({
+                  data: mapToAnimeReviews(res.data.data),
+                  pagination: res.data.pagination
+                });
+              } else resolve({ data: null, pagination: null });
+            }).catch((e) => {
+              reject(e);
+            });
+        }, 500)
+      });
     }
   },
   season: {
     getUpcomingSeasonAnime: async (type: string, limit?: number) => {
       return await axios.get(`${BASE_API_URL}/seasons/upcoming?filter=${type}&limit=${limit || 5}`);
     },
-    getCurrentSeasonAnime: async (limit?: number) => {
-      return await axios.get(`${BASE_API_URL}/seasons/now?filter=tv&limit=${limit || 10}`).then((res) => {
-        if (res.status === 200) {
-          const responseData = {
-            data: mapArrayDataToAnimeDetails(res.data.data)
-          }
-          return responseData;
-        } else {
-          return null;
-        }
-      }).catch((e) => {
-        console.error(e);
+    getCurrentSeasonAnime: (limit?: number): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          await axios.get(`${BASE_API_URL}/seasons/now?filter=tv&limit=${limit || 10}`).then((res) => {
+            if (res.status === 200) {
+              resolve({
+                data: mapArrayDataToAnimeDetails(res.data.data),
+                pagination: res.data.pagination
+              })
+            } else resolve({ data: null, pagination: null });
+          }).catch((e) => {
+            reject(e);
+          });
+        }, 500)
       })
     },
     getSeasonLists: async () => {
@@ -84,35 +87,38 @@ export const MAL_API = {
     },
   },
   top: {
-    getTopAnime: async (filter: string, limit?: number, page?: number) => {
-      return await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`)
-      .then((res) => {
-        if (res.status === 200) {
-          const responseData = {
-            data: mapArrayDataToAnimeDetails(res.data.data),
-            pagination: res.data.pagination
-          } 
-          return responseData;
-        } else {
-          return null;
-        }
-      }).catch((e) => console.error(e))
+    getTopAnime: (filter: string, limit?: number, page?: number): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          await axios.get(`${BASE_API_URL}/top/anime?filter=${filter}&limit=${limit || 5}&page=${page || 1}`)
+            .then((res) => {
+              if (res.status === 200) {
+                resolve({
+                  data: mapArrayDataToAnimeDetails(res.data.data),
+                  pagination: res.data.pagination
+                });
+              } else resolve({ data: null, pagination: null });
+            }).catch((e) => reject(e));
+        }, 500)
+      });
     },
   },
   watch: {
-    getWatchRecentEpisodes: async () => {
-      return await axios.get(`${BASE_API_URL}/watch/episodes`).then((res) => {
-        if (res.status === 200) {
-          const responseData = {
-            data: res.data.data
-          }
-          return responseData;
-        } else {
-          return null;
-        }
-      }).catch((e) => {
-        console.error(e);
-      })
+    getWatchRecentEpisodes: (): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          await axios.get(`${BASE_API_URL}/watch/episodes`).then((res) => {
+            if (res.status === 200) {
+              resolve({
+                data: res.data.data,
+                pagination: res.data?.pagination
+              });
+            } else resolve({ data: null, pagination: null });
+          }).catch((e) => {
+            reject(e);
+          });
+        }, 500)
+      });
     }
   }
 }

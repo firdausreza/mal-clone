@@ -77,14 +77,21 @@
 </template>
 
 <script lang="ts">
-import { AnimeDetail } from '~/functions/interface/anime-detail.interface';
+import { MAL_API as api } from '../../functions/api/mal';
 import numeral from 'numeral';
+import { AnimeDetail } from '../../functions/interface/anime-detail.interface';
 
 export default {
   name: 'TopAnime',
   props: {
-    topTitle: String,
-    linkHref: String,
+    topTitle: {
+      type: String,
+      default: ''
+    },
+    linkHref: {
+      type: String,
+      default: ''
+    },
     animeData: Array<AnimeDetail>
   },
   setup(props) {

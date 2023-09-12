@@ -2,8 +2,8 @@ import { AnimeAired, AnimeBroadcast, AnimeDemographics, AnimeGenres, AnimeImages
 import { User } from "./user.interface"
 
 export interface ApiResponse {
-  data: Array<AnimeDataResponse> | AnimeDataResponse,
-  pagination?: PaginationResponse
+  data: Array<any> | Object | null,
+  pagination?: PaginationResponse | null
 }
 
 export interface AnimeDataResponse {
