@@ -1,13 +1,21 @@
 <template>
   <div class="bg-white dark:bg-mal-dark text-gray-600 dark:text-white">
-    <section class="w-full bg-mal-lightblue dark:bg-mal-lightdark text-mal-blue dark:text-white border-b-2 border-mal-blue dark:border-gray-400 mx-auto">
+    <section
+      class="w-full bg-mal-lightblue dark:bg-mal-lightdark text-mal-blue dark:text-white border-b-2 border-mal-blue dark:border-gray-400 mx-auto"
+    >
       <div class="max-w-screen-xl mx-auto px-4 py-1">
         <h1 class="font-bold text-lg">Welcome to MyAnimeList!</h1>
       </div>
     </section>
     <app-load v-if="isLoading" class="max-w-screen-xl h-screen mx-auto" />
-    <section v-else class="max-w-screen-xl flex flex-col lg:flex-row items-start mx-auto max-[640px]:gap-5 p-4">
-      <section id="main-content" class="flex-1 lg:max-w-[70%] flex flex-col gap-4 lg:pr-2 lg:border-r-2 border-gray-300">
+    <section
+      v-else
+      class="max-w-screen-xl flex flex-col lg:flex-row items-start mx-auto max-[640px]:gap-5 p-4"
+    >
+      <section
+        id="main-content"
+        class="w-full lg:max-w-[70%] flex flex-col gap-4 lg:pr-2 lg:border-r-2 border-gray-300"
+      >
         <anime-carousel
           id="current-season-anime"
           :carousel-title="currentSeason"
@@ -27,20 +35,31 @@
                 slidesPerGroup: 4,
                 slidesOffsetAfter: 20,
                 slidesPerGroupAuto: 'true',
-                spaceBetween: 5
-              }
+                spaceBetween: 5,
+              },
             }"
             v-slot
           >
-            <swiper-slide v-for="anime in currentSeasonAnime" lazy="true" class="w-[35%] md:w-[160px]">
-              <nuxt-link class="bg-transparent hover:bg-gray-200 cursor-pointer">
-                <img 
-                  :src="anime.images.webp.image_url" 
-                  alt="Anime Poster" 
+            <swiper-slide
+              v-for="anime in currentSeasonAnime"
+              lazy="true"
+              class="w-[35%] md:w-[160px] md:h-[220px]"
+            >
+              <nuxt-link
+                :to="anime.url"
+                target="_blank"
+                rel="noreferrer"
+                class="bg-transparent hover:bg-gray-200 cursor-pointer"
+              >
+                <img
+                  :src="anime.images.webp.image_url"
+                  alt="Anime Poster"
                   class="z-0 object-cover border border-mal-lightdark"
                   loading="lazy"
+                />
+                <div
+                  class="absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75"
                 >
-                <div class="absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75">
                   <p class="text-xs text-white">{{ anime.titles[0].title }}</p>
                 </div>
               </nuxt-link>
@@ -49,7 +68,7 @@
         </anime-carousel>
 
         <anime-carousel
-          id="current-season-anime"
+          id="latest-anime"
           carousel-title="Latest Updated Anime Episodes"
           link-href=""
           v-if="recentEpisodes && recentEpisodes.length > 0"
@@ -67,25 +86,47 @@
                 slidesPerGroup: 4,
                 slidesOffsetAfter: 20,
                 slidesPerGroupAuto: 'true',
-                spaceBetween: 5
-              }
+                spaceBetween: 5,
+              },
             }"
             v-slot
           >
             <swiper-slide v-for="anime in recentEpisodes" lazy="true" class="w-[120px]">
-              <nuxt-link class="cursor-pointer overflow-x-hidden">
+              <nuxt-link
+                :to="anime.entry.url"
+                target="_blank"
+                rel="noreferrer"
+                class="cursor-pointer overflow-x-hidden"
+              >
                 <div class="relative">
-                  <img :src="anime.entry.images.webp.image_url" alt="Anime Poster" class="z-0 w-[120px] h-[180px] object-cover border border-mal-lightdark">
-                  <div class="absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75">
-                    <nuxt-link v-for="episode in anime.episodes" class="text-xs text-white block">
+                  <img
+                    :src="anime.entry.images.webp.image_url"
+                    alt="Anime Poster"
+                    class="z-10 w-[120px] h-[180px] object-cover border border-mal-lightdark"
+                  />
+                  <div
+                    class="absolute z-10 bottom-0 inset-x-0 px-2 pb-2 bg-gradient-to-b from-transparent to-black/75"
+                  >
+                    <nuxt-link
+                      :to="episode.url"
+                      target="_blank"
+                      rel="noreferrer"
+                      v-for="episode in anime.episodes"
+                      class="text-xs text-white block"
+                    >
                       {{ episode.title }}
                       <span v-if="episode.premium">
-                        <font-awesome-icon icon="fa-solid fa-crown" style="color: #f8d345;" />
+                        <font-awesome-icon icon="fa-solid fa-crown" style="color: #f8d345" />
                       </span>
                     </nuxt-link>
                   </div>
                 </div>
-                <nuxt-link class="z-10 text-xs font-semibold block truncate">
+                <nuxt-link
+                  :to="anime.entry.url"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="text-xs text-mal-lightblue font-semibold block truncate"
+                >
                   {{ anime.entry.title }}
                 </nuxt-link>
               </nuxt-link>
@@ -93,23 +134,23 @@
           </swiper-container>
         </anime-carousel>
 
-        <anime-reviews
-          :review-data="recentReviews"
-        ></anime-reviews>
+        <anime-reviews :review-data="recentReviews"></anime-reviews>
+
+        <anime-recommendation :anime-data="animeRecommendations"></anime-recommendation>
       </section>
       <section id="sidebar" class="w-full lg:flex-1 lg:max-w-[30%] flex flex-col gap-3 lg:pl-2">
         <top-anime
           top-title="Top Airing Anime"
           :anime-data="topAiringAnime"
           :category="{
-            filter: 'airing'
+            filter: 'airing',
           }"
         ></top-anime>
         <top-anime
           top-title="Top Upcoming Anime"
           :anime-data="topUpcomingAnime"
           :category="{
-            filter: 'upcoming'
+            filter: 'upcoming',
           }"
         ></top-anime>
         <top-anime
@@ -117,7 +158,7 @@
           :anime-data="topPopularAnime"
           :category="{
             filter: 'bypopularity',
-            limit: 10
+            limit: 10,
           }"
         ></top-anime>
       </section>
@@ -126,27 +167,29 @@
 </template>
 
 <script lang="ts">
-import { getCurrentSeason } from '~/functions/composables/mal-season';
-import { MAL_API as api } from '~/functions/api/mal';
+import { getCurrentSeason } from "~/functions/composables/mal-season";
+import { MAL_API as api } from "~/functions/api/mal";
 
-import TopAnime from '~/components/homepage/TopAnime.vue';
-import AnimeCarousel from '~/components/carousel/AnimeCarousel.vue';
-import AnimeReviews from '~/components/homepage/AnimeReviews.vue';
-import AppLoad from '~/components/AppLoad.vue';
+import TopAnime from "~/components/homepage/TopAnime.vue";
+import AnimeCarousel from "~/components/carousel/AnimeCarousel.vue";
+import AnimeReviews from "~/components/homepage/AnimeReviews.vue";
+import AnimeRecommendation from "~/components/homepage/AnimeRecommendation.vue";
+import AppLoad from "~/components/AppLoad.vue";
 
-import { AnimeDetail } from '~/functions/interface/anime-detail.interface';
-import { AnimeReview } from '~/functions/interface/anime-review.interface';
-
-import pLimit from 'p-limit';
+import pLimit from "p-limit";
 
 export default {
-  name: 'Homepage',
+  name: "Homepage",
   components: {
-    AnimeCarousel, TopAnime, AnimeReviews, AppLoad
+    AnimeCarousel,
+    TopAnime,
+    AnimeReviews,
+    AnimeRecommendation,
+    AppLoad,
   },
   setup() {
     const windowWidth = ref<number>(0);
-    const isLoading= ref<boolean>(true);
+    const isLoading = ref<boolean>(true);
     const currentSeasonAnime = ref();
     const currentSeason = ref<string>();
     const topAiringAnime = ref();
@@ -154,58 +197,96 @@ export default {
     const topPopularAnime = ref();
     const recentEpisodes = ref();
     const recentReviews = ref();
+    const animeRecommendations = ref();
 
     const checkNavSlideBreakpoints = computed(() => {
       if (windowWidth.value > 768) {
-        return 'true'
+        return "true";
       } else {
-        return 'false'
+        return "false";
       }
     });
 
     const checkFreeModeBreakpoints = computed(() => {
       if (windowWidth.value > 768) {
-        return 'false'
+        return "false";
       } else {
-        return 'true'
+        return "true";
       }
     });
 
     onUpdated(() => {
-      window.addEventListener('resize', () => {
+      window.addEventListener("resize", () => {
         windowWidth.value = window.innerWidth;
       });
-    })
-
-    onBeforeUnmount(() => {
-      window.removeEventListener('resize', () => {})
     });
 
-    onMounted(async () => { 
+    onBeforeUnmount(() => {
+      window.removeEventListener("resize", () => {});
+    });
+
+    onMounted(async () => {
       isLoading.value = true;
-      const limit = pLimit(2);
+      const limit = pLimit(1);
       currentSeason.value = getCurrentSeason();
 
       try {
         await Promise.all([
-          limit(() => api.season.getCurrentSeasonAnime(20).then((data) => currentSeasonAnime.value = data.data)),
-          limit(() => api.watch.getWatchRecentEpisodes().then((data) => recentEpisodes.value = data.data)),
-          limit(() => api.review.getRecentAnimeReviews().then((data) => recentReviews.value = data.data.filter((_data: any) => !_data.region_locked).slice(0,5))),
-          limit(() => api.top.getTopAnime('airing').then((data) => topAiringAnime.value = data.data)),
-          limit(() => api.top.getTopAnime('upcoming').then((data) => topUpcomingAnime.value = data.data)),
-          limit(() => api.top.getTopAnime('bypopularity', 10).then((data) => topPopularAnime.value = data.data))
+          limit(() =>
+            api.season
+              .getCurrentSeasonAnime(20)
+              .then((data) => (currentSeasonAnime.value = data.data))
+          ),
+          limit(() =>
+            api.watch.getWatchRecentEpisodes().then((data) => (recentEpisodes.value = data.data))
+          ),
+          limit(() =>
+            api.review
+              .getRecentAnimeReviews()
+              .then(
+                (data) =>
+                  (recentReviews.value = data.data
+                    .filter((_data: any) => !_data.region_locked)
+                    .slice(0, 5))
+              )
+          ),
+          limit(() =>
+            api.top.getTopAnime("airing").then((data) => (topAiringAnime.value = data.data))
+          ),
+          limit(() =>
+            api.top.getTopAnime("upcoming").then((data) => (topUpcomingAnime.value = data.data))
+          ),
+          limit(() =>
+            api.top
+              .getTopAnime("bypopularity", 5)
+              .then((data) => (topPopularAnime.value = data.data))
+          ),
+          limit(() =>
+            api.recommendation
+              .getRecentAnimeRecommendation()
+              .then((data) => (animeRecommendations.value = data.data.slice(0, 5)))
+          ),
         ]);
       } finally {
         isLoading.value = false;
       }
-    })
+    });
 
     return {
-      currentSeasonAnime, currentSeason, topAiringAnime, topUpcomingAnime, topPopularAnime, recentEpisodes, recentReviews, 
-      checkFreeModeBreakpoints, checkNavSlideBreakpoints, isLoading
-    }
-  }
-}
+      currentSeasonAnime,
+      currentSeason,
+      topAiringAnime,
+      topUpcomingAnime,
+      topPopularAnime,
+      recentEpisodes,
+      recentReviews,
+      animeRecommendations,
+      checkFreeModeBreakpoints,
+      checkNavSlideBreakpoints,
+      isLoading,
+    };
+  },
+};
 </script>
 
 <style lang="less">

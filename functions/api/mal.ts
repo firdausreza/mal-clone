@@ -30,17 +30,22 @@ export const MAL_API = {
     },
   },
   recommendation: {
-    getRecentAnimeRecommendation: async () => {
-      return await axios.get(`${BASE_API_URL}/recommendations/anime`)
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.data, 'data recommendation')
-          } else {
-            return null;
-          }
-        }).catch((e) => {
-          console.error(e);
-        })
+    getRecentAnimeRecommendation: (): Promise<ApiResponse> => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          await axios.get(`${BASE_API_URL}/recommendations/anime`)
+            .then((res) => {
+              if (res.status === 200) {
+                resolve({
+                  data: res.data.data,
+                  pagination: res.data.pagination
+                });
+              } else resolve({ data: null, pagination: null });
+            }).catch((e) => {
+              reject(e);
+            });
+        }, 500);
+      }) 
     }
   },
   review: {

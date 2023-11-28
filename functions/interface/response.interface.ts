@@ -80,3 +80,18 @@ export interface ReviewsResponse {
   url: string,
   user: User
 }
+
+export interface RecomResponse {
+  mal_id: number,
+  content: string,
+  user: {
+    url: string,
+    username: string
+  },
+  entry: Array<{
+    mal_id: number,
+    url: string,
+    images: AnimeImages,
+    title: string
+  }>
+}
