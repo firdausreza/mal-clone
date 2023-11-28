@@ -39,7 +39,7 @@
                 :to="anime.url"
                 target="_blank"
                 rel="noreferrer"
-                class="text-xs font-semibold text-mal-lightblue hover:underline underline-offset-1 capitalize"
+                class="text-xs font-semibold text-mal-blue dark:text-mal-lightblue hover:underline underline-offset-1 capitalize"
               >
                 {{ anime.titles[0].title }}
               </nuxt-link>
@@ -59,7 +59,7 @@
                   {{ anime.statistics.score || "N/A" }}
                 </p>
               </div>
-              <p class="text-white text-xs">
+              <p class="text-mal-blue dark:text-white text-xs">
                 {{ numeral(anime.statistics.members).format("0,0") }} members
               </p>
             </div>
