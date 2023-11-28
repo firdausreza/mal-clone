@@ -3,12 +3,18 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss'
   ],
+  components: [
+    '~/components'
+  ],
   css: [
     '@/assets/css/index.css',
     '@fortawesome/fontawesome-svg-core/styles.css'
   ],
+  build: {
+    transpile: ['@fortawesome/vue-fontawesome']
+  },
   plugins: [
-    '~/plugins/fontawesome.js'
+    '~/plugins/fontawesome.js',
   ],
   app: {
     head: {
@@ -20,5 +26,6 @@ export default defineNuxtConfig({
       ],
       title: 'MyAnimeList Clone'
     }
-  }
+  },
+  pages: true,
 })

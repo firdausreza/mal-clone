@@ -2,8 +2,8 @@ export interface AnimeDetail {
   mal_id: number,
   titles: Array<AnimeTitles>,
   url: string,
-  images: object,
-  trailer: object,
+  images: AnimeImages,
+  trailer: any,
   information: AnimeInfo,
   statistics: AnimeStats,
 }
@@ -92,4 +92,17 @@ export interface AnimeBroadcast {
   time: string,
   timezone: string,
   string?: string
+}
+
+export interface AnimeImages {
+  jpg?: {
+    image_url: string,
+    large_image_url?: string,
+    small_image_url?: string
+  },
+  webp?: {
+    image_url: string,
+    large_image_url?: string,
+    small_image_url?: string
+  }
 }
