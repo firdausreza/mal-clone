@@ -4,7 +4,10 @@
       <h3 class="text-sm md:text-base font-semibold">
         {{ carouselTitle }}
       </h3>
-      <nuxt-link to="#" class="text-sm text-mal-lightblue font-bold hover:underline underline-offset-1">
+      <nuxt-link
+        to="#"
+        class="text-sm text-mal-blue dark:text-mal-lightblue font-bold hover:underline underline-offset-1"
+      >
         View More
       </nuxt-link>
     </div>
@@ -16,7 +19,7 @@
 
 <script lang="ts">
 export default {
-  name: 'AnimeCarousel',
+  name: "AnimeCarousel",
   props: {
     carouselTitle: String,
     linkHref: String,
@@ -26,8 +29,9 @@ export default {
     const { linkHref } = toRefs(props);
 
     return {
-      carouselTitle, linkHref
-    }
-  }
-}
+      carouselTitle,
+      linkHref,
+    };
+  },
+};
 </script>
