@@ -704,6 +704,12 @@ export default {
       }
     }
 
+    function searchInputFocusIn() {
+      if (searchKeyword.value !== "") {
+        showSearchResults.value = true;
+      }
+    }
+
     return {
       windowWidth,
       showAnimeDropdown,
