@@ -2,7 +2,7 @@ export interface AnimeDetail {
   mal_id: number,
   titles: Array<AnimeTitles>,
   url: string,
-  images: any,
+  images: AnimeImages,
   trailer: any,
   information: AnimeInfo,
   statistics: AnimeStats,
