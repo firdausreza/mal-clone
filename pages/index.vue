@@ -125,7 +125,7 @@
                   :to="anime.entry.url"
                   target="_blank"
                   rel="noreferrer"
-                  class="text-xs text-mal-lightblue font-semibold block truncate"
+                  class="text-xs text-mal-blue dark:text-mal-lightblue font-semibold block truncate"
                 >
                   {{ anime.entry.title }}
                 </nuxt-link>

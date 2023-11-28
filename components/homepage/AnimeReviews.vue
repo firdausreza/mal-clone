@@ -5,7 +5,10 @@
       class="w-full flex items-center justify-between gap-2 pb-1 border-b border-mal-lightdark"
     >
       <h3 class="font-semibold">Latest Anime Reviews</h3>
-      <nuxt-link to="#" class="text-mal-lightblue text-xs hover:underline underline-offset-1">
+      <nuxt-link
+        to="#"
+        class="text-mal-blue dark:text-mal-lightblue text-xs hover:underline underline-offset-1"
+      >
         View More
       </nuxt-link>
     </section>
@@ -71,7 +74,7 @@
           </p>
           <nuxt-link
             to="#"
-            class="w-max text-xs text-mal-blue hover:text-mal-lightblue hover:underline underline-offset-1 font-semibold transition-colors"
+            class="w-max text-xs text-mal-blue dark:hover:text-mal-lightblue hover:underline underline-offset-1 font-semibold transition-colors"
           >
             Read More
           </nuxt-link>
