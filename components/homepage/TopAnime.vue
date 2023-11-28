@@ -126,7 +126,6 @@
 </template>
 
 <script lang="ts">
-import { MAL_API as api } from "../../functions/api/mal";
 import numeral from "numeral";
 import { AnimeDetail } from "../../functions/interface/anime-detail.interface";
 
